@@ -1,8 +1,20 @@
+// Load environment variables from .env file
+require('dotenv').config();
+
 // Import the Express.js library for creating the server application.
 const express = require('express');
 
 // Import the Nodemailer library for sending emails.
 const nodemailer = require('nodemailer');
+
+// Update AWS SDK configurations to use the environment variables.
+const AWS = require('aws-sdk');
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: 'us-east-1'
+});
 
 // Import necessary components from the AWS SDK for Secrets Manager.
 const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
