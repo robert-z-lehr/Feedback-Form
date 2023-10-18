@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Form</title>
+</head>
+<body>
+
+<h1>GitHub Feedback Form</h1>
+
+<div>
+    <h2>Feedback</h2>
+    <textarea id="feedback" rows="4" cols="50"></textarea><br>
+    <button onclick="sendEmail('Feedback')">Submit Feedback</button>
+</div>
+
+<div>
+    <h2>Ideas</h2>
+    <textarea id="ideas" rows="4" cols="50"></textarea><br>
+    <button onclick="sendEmail('Ideas')">Submit Ideas</button>
+</div>
+
+<div>
+    <h2>Questions</h2>
+    <textarea id="questions" rows="4" cols="50"></textarea><br>
+    <button onclick="sendEmail('Questions')">Submit Questions</button>
+</div>
+
+<script>
+    function sendEmail(type) {
+        var textArea = document.getElementById(type.toLowerCase());
+        var body = encodeURIComponent(textArea.value);
+        var subject = 'GitHub Feedback Form - ' + type;
+        var email = 'robert.z.lehr@gmail.com';
+        window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    }
+</script>
+
+</body>
+</html>
