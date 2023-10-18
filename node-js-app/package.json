@@ -1,0 +1,32 @@
+{
+  "name": "feedback-form-github-aws",
+  "version": "1.0.0",
+  "description": "Used to connect the github feedback form to the aws server so feedback emails can be sent to my personal email without exposing my personal information.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/robert-z-lehr/Feedback-Form.git"
+  },
+  "keywords": [
+    "feedback",
+    "form",
+    "github",
+    "aws"
+  ],
+  "author": "Robert Zygmunt Lehr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robert-z-lehr/Feedback-Form/issues"
+  },
+  "homepage": "https://github.com/robert-z-lehr/Feedback-Form#readme",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.430.0",
+    "aws-sdk": "^2.1475.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.6"
+  }
+}

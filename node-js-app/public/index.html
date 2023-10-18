@@ -26,12 +26,23 @@
 </div>
 
 <script>
-    function sendEmail(type) {
-        var textArea = document.getElementById(type.toLowerCase());
-        var body = encodeURIComponent(textArea.value);
-        var subject = 'GitHub Feedback Form - ' + type;
-        var email = 'robert.z.lehr@gmail.com';
-        window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    async function sendEmail(type) {
+      const textArea = document.getElementById(type.toLowerCase());
+      const body = textArea.value;
+
+      const response = await fetch('/sendEmail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type, body }),
+      });
+
+      if (response.ok) {
+        alert('Email sent successfully');
+      } else {
+        alert('Failed to send email');
+      }
     }
 </script>
 
