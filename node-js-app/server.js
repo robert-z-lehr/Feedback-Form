@@ -1,41 +1,32 @@
-// Load environment variables from .env file
-require('dotenv').config();
-
-// Import the Express.js library for creating the server application.
+// Import Dependencies
 const express = require('express');
-
-// Import the Nodemailer library for sending emails.
 const nodemailer = require('nodemailer');
-
-// Update AWS SDK configurations to use the environment variables.
 const AWS = require('aws-sdk');
+const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
+const cors = require('cors');
+require('dotenv').config(); // Load environment variables from .env file
 
+// Create Express Application
+const app = express();
+
+// Define Port Number
+const port = 3000;
+
+// AWS Configuration
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: 'us-east-1'
 });
 
-// Import necessary components from the AWS SDK for Secrets Manager.
-const { SecretsManagerClient, GetSecretValueCommand } = require("@aws-sdk/client-secrets-manager");
-
-// Import the CORS middleware to enable Cross-Origin Resource Sharing (CORS).
-const cors = require('cors');
-
-// Create an Express.js application.
-const app = express();
-
-// Define the port number for the server to listen on.
-const port = 3000;
-
-// AWS Secrets Manager configuration
+// AWS Secrets Manager Configuration
 const secretName = "FeedbackForm-GitHub"; // Replace with your secret name
 const awsRegion = "us-east-1"; // Replace with your AWS region
-
 const secretsManagerClient = new SecretsManagerClient({
   region: awsRegion
 });
 
+// Nodemailer Transporter
 let transporter;
 
 // Function to fetch secrets from AWS Secrets Manager
@@ -51,6 +42,7 @@ async function fetchSecrets() {
     // Parse the secret string as JSON
     return JSON.parse(response.SecretString);
   } catch (error) {
+    console.error('Error fetching secrets:', error);
     throw error;
   }
 }
@@ -69,14 +61,17 @@ fetchSecrets()
       }
     });
   })
-  .catch(console.error);
+  .catch(error => {
+    console.error('Error setting up transporter:', error);
+    throw error;
+  });
 
-// Middleware setup
+// Middleware Setup
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.static('public')); // Serve static files from the 'public' directory
 app.use(cors()); // Enable CORS for cross-origin requests
 
-// Route to handle sending emails
+// Route to Handle Sending Emails
 app.post('/sendEmail', async (req, res) => {
   const { type, body } = req.body;
   const subject = `GitHub Feedback Form - ${type}`;
@@ -91,14 +86,15 @@ app.post('/sendEmail', async (req, res) => {
   try {
     // Send the email using Nodemailer
     await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
     res.status(200).send('Email sent successfully');
   } catch (error) {
-    console.log(error); // Log the error for debugging purposes
+    console.error('Error sending email:', error);
     res.status(500).send('Internal Server Error'); // Respond with a 500 status for server errors
   }
 });
 
-// Start the Express server
+// Start the Express Server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
