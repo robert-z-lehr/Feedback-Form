@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feedback Form</title>
+</head>
+<body>
+
+<!-- Heading for the feedback form -->
+<h1>GitHub Feedback Form</h1>
+
+<!-- Feedback section -->
+<div>
+    <h2>Feedback</h2>
+    <!-- Text area for entering feedback -->
+    <textarea id="feedback" rows="4" cols="50"></textarea><br>
+    <!-- Button to submit feedback -->
+    <button onclick="sendEmail('Feedback')">Submit Feedback</button>
+</div>
+
+<!-- Ideas section -->
+<div>
+    <h2>Ideas</h2>
+    <!-- Text area for entering ideas -->
+    <textarea id="ideas" rows="4" cols="50"></textarea><br>
+    <!-- Button to submit ideas -->
+    <button onclick="sendEmail('Ideas')">Submit Ideas</button>
+</div>
+
+<!-- Questions section -->
+<div>
+    <h2>Questions</h2>
+    <!-- Text area for entering questions -->
+    <textarea id="questions" rows="4" cols="50"></textarea><br>
+    <!-- Button to submit questions -->
+    <button onclick="sendEmail('Questions')">Submit Questions</button>
+</div>
+
+<!-- Script section -->
+<script>
+    // Function to send an email based on the type (Feedback, Ideas, Questions)
+    async function sendEmail(type) {
+      // Get the text area element based on the type
+      const textArea = document.getElementById(type.toLowerCase());
+      const body = textArea.value;
+
+      // Send a POST request to the server's /sendEmail route with the type and body
+      const response = await fetch('https://your-deployed-server.com/sendEmail', {  // Change this URL
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type, body }),
+      });
+      
+      // Display a success or error message based on the response
+      if (response.ok) {
+        alert('Thank you for your feedback!');
+      } else {
+        alert('Sorry, we were unable to process your request at this time. Please try again later.');
+      }
+    }
+</script>
+
+</body>
+</html>
